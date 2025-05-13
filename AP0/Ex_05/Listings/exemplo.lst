@@ -1,0 +1,117 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; Exemplo.s
+    2 00000000         ; Desenvolvido para a placa EK-TM4C1294XL
+    3 00000000         ; Esquele de um novo Projeto para Keil
+    4 00000000         ; Prof. Guilherme de S. Peron - 12/03/2018
+    5 00000000         ; Prof. Marcos E. P. Monteiro - 12/03/2018
+    6 00000000         ; Prof. DaLuz             - 25/02/2022
+    7 00000000         
+    8 00000000         ;#######################################################
+                       #########################
+    9 00000000         ; Declarações EQU
+   10 00000000         ; <NOME> EQU <VALOR>
+   11 00000000         ;#######################################################
+                       #########################
+   12 00000000                 AREA             |.text|, CODE, READONLY, ALIGN=
+2
+   13 00000000                 THUMB
+   14 00000000         ; Se alguma função do arquivo for chamada em outro arqui
+                       vo 
+   15 00000000                 EXPORT           Start       ; Permite chamar a 
+                                                            função Start a part
+                                                            ir de 
+   16 00000000         ; outro arquivo. No caso startup.s
+   17 00000000         
+   18 00000000         ; Se chamar alguma função externa 
+   19 00000000         ; IMPORT <func>             ; Permite chamar dentro dest
+                       e arquivo uma 
+   20 00000000         ; função <func>
+   21 00000000         
+   22 00000000         ;#######################################################
+                       #########################
+   23 00000000         ; Função main()
+   24 00000000         Start                                ;Label Start ... vo
+                                                            id main(void)
+   25 00000000         ; Comece o código aqui <================================
+                       =========================
+   26 00000000         
+   27 00000000 F04F 000A       MOV              R0, #10     ;a) Mova o valor 10
+                                                             para o registrador
+                                                             R0;
+   28 00000004         
+   29 00000004 F010 0F09       TSTS             R0, #9      ;b) Teste se o regi
+                                                            strador é maior ou 
+                                                            igual que 9;
+   30 00000008 BF06            ITTE             EQ          ;c) Crie um bloco c
+                                                            om If-Then com 3 ex
+                                                            ecuções condicionai
+                                                            s
+   31 0000000A 2132            MOVEQ            R1, #50     ;- Se sim, salve o 
+                                                            número 50 no R1
+   32 0000000C F101 0220       ADDEQ            R2, R1, #32 ;- Se sim, adicione
+                                                             32 com o R1 e salv
+                                                            e o resultado em R2
+                                                            
+   33 00000010 234B            MOVNE            R3, #75     ;- Se não, salve o 
+                                                            número 75 no R3
+   34 00000012         
+   35 00000012 F010 0F0B       TSTS             R0, #11     ;d) Agora verifique
+                                                             se o registrador é
+                                                             maior ou igual a 1
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                                                            1 e execute
+   36 00000016 BF06            ITTE             EQ          ;novamente o passo 
+                                                            (c);
+   37 00000018 2132            MOVEQ            R1, #50
+   38 0000001A F101 0220       ADDEQ            R2, R1, #32
+   39 0000001E 234B            MOVNE            R3, #75
+   40 00000020         
+   41 00000020         
+   42 00000020         
+   43 00000020         ; Final do código aqui <================================
+                       =========================
+   44 00000020 BF00            NOP
+   45 00000022 00 00           ALIGN                        ;garante que o fim 
+                                                            da seção está alinh
+                                                            ada 
+   46 00000024                 END                          ;fim do arquivo
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\exemplo.d -o.\objects\exemplo.o -IE:\Facul\Microcontr
+oladores\Projetos\Ex_00\Ex_05\RTE -IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Dev
+ice\Include\TM4C129 -IC:\Keil_v5\ARM\CMSIS\Include --predefine="__EVAL SETA 1" 
+--predefine="__UVISION_VERSION SETA 518" --predefine="TM4C1294NCPDT SETA 1" --l
+ist=.\listings\exemplo.lst exemplo.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 12 in file exemplo.s
+   Uses
+      None
+Comment: .text unused
+Start 00000000
+
+Symbol: Start
+   Definitions
+      At line 24 in file exemplo.s
+   Uses
+      At line 15 in file exemplo.s
+Comment: Start used once
+2 symbols
+336 symbols in table

@@ -1,0 +1,62 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.36.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: a b, c, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.36.0.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.16
+Assembler:       Armasm.exe V6.16
+Linker/Locator:  ArmLink.exe V6.16
+Library Manager: ArmAr.exe V6.16
+Hex Converter:   FromElf.exe V6.16
+CPU DLL:         SARMCM3.DLL V5.36.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      UL2CM3.DLL V1.164.0.0
+Dialog DLL:      TCM.DLL V1.53.0.0
+ 
+<h2>Project:</h2>
+D:\Facul\Microcontroladores\Projetos\AP0\Ex_08\Ex_08.uvprojx
+Project File Date:  07/28/2024
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.16', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
+Build target 'Target 1'
+"exemplo.s", line 29 (column 9): Warning: A1865W: '#' not seen before constant expression
+   29 00000004  MOV R0, 5      ;Valor a ser carregado na memoria
+                       ^
+"exemplo.s", line 35 (column 12): Warning: A1865W: '#' not seen before constant expression
+   35 0000000e     MOV R3, 1                       ;Inicializa R3 como 1 (acumulador para o fatorial)
+                          ^
+"exemplo.s", line 38 (column 12): Warning: A1865W: '#' not seen before constant expression
+   38 00000012     CMP R0, 1                       ;Compara o valor de R0 com 1
+                          ^
+"exemplo.s", line 41 (column 16): Warning: A1865W: '#' not seen before constant expression
+   41 0000001a     SUB R0, R0, 1                   ;Decrementa R0 (R0 = R0 - 1)
+                              ^
+0 Errors, 4 Warnings
+assembling exemplo.s...
+linking...
+Program Size: Code=584 RO-data=0 RW-data=0 ZI-data=1024  
+".\Objects\Ex_08.axf" - 0 Error(s), 0 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.TM4C_DFP.1.1.0.pack
+                Keil.TM4C_DFP.1.1.0
+                Texas Instruments Tiva C Series Device Support and Examples
+
+<h2>Collection of Component include folders:</h2>
+  C:\Users\Johan\Desktop\KEIL\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C129
+
+<h2>Collection of Component Files used:</h2>
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>

@@ -1,0 +1,307 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; main.s
+    2 00000000         ; Desenvolvido para a placa EK-TM4C1294XL
+    3 00000000         ; Exemplo de uso de GPIO ...
+    4 00000000         ; Prof. Guilherme de S. Peron - 12/03/2018
+    5 00000000         ; Prof. Marcos E. P. Monteiro - 12/03/2018
+    6 00000000         ; Prof. DaLuz             - 25/02/2022
+    7 00000000         
+    8 00000000         ;#######################################################
+                       #########################
+    9 00000000         
+   10 00000000         ; Este programa espera o usuário apertar a chave USR_SW1
+                       .
+   11 00000000         ; Caso o usuário pressione a chave, o LED1 piscará a cad
+                       a 0,5 segundo.
+   12 00000000         
+   13 00000000         ;#######################################################
+                       #########################
+   14 00000000                 THUMB                        ; Instruções do tip
+                                                            o Thumb-2
+   15 00000000         ;#######################################################
+                       #########################
+   16 00000000         ; Definições dos Registradores Gerais.  Obs: *(EQU)=(EQU
+                       ATE)*
+   17 00000000         ;<NOME> EQU <VALOR>
+   18 00000000         ;#######################################################
+                       #########################
+   19 00000000         ; Área de Dados - Declarações de variáveis
+   20 00000000                 AREA             DATA, ALIGN=2
+   21 00000000         ; Se alguma variável for chamada em outro arquivo
+   22 00000000         ;EXPORT  <var> [DATA,SIZE=<tam>] ; Permite chamar a vari
+                       ável <var> a 
+   23 00000000         ; partir de outro arquivo
+   24 00000000         ;<var> SPACE <tam>                     ; Declara uma var
+                       iável de nome <var>
+   25 00000000         ; de <tam> bytes a partir da primeira 
+   26 00000000         ; posição da RAM  
+   27 00000000         ;#######################################################
+                       #########################
+   28 00000000         ; Área de Código - Tudo abaixo da diretiva a seguir será
+                        armazenado na memória de 
+   29 00000000         ;                  código
+   30 00000000                 AREA             |.text|, CODE, READONLY, ALIGN=
+2
+   31 00000000         ; Se alguma função do arquivo for chamada em outro arqui
+                       vo 
+   32 00000000                 EXPORT           Start       ; Permite chamar a 
+                                                            função Start a part
+                                                            ir de 
+   33 00000000         ; outro arquivo. No caso startup.s
+   34 00000000         ; Se chamar alguma função externa 
+   35 00000000         ;IMPORT <func>                ; Permite chamar dentro de
+                       ste arquivo uma 
+   36 00000000         ; função <func>
+   37 00000000                 IMPORT           PLL_Init
+   38 00000000                 IMPORT           SysTick_Init
+   39 00000000                 IMPORT           SysTick_Wait1ms
+   40 00000000                 IMPORT           GPIO_Init
+   41 00000000                 IMPORT           PortN_Output
+   42 00000000                 IMPORT           PortJ_Input
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   43 00000000         ;#######################################################
+                       #########################
+   44 00000000         ; Função main()
+   45 00000000         Start
+   46 00000000 F7FF FFFE       BL               PLL_Init    ;Chama a subrotina 
+                                                            para alterar o cloc
+                                                            k do microcontrolad
+                                                            or para 80MHz
+   47 00000004 F7FF FFFE       BL               SysTick_Init ;Chama a subrotina
+                                                             para Inicializar o
+                                                             SysTick
+   48 00000008 F7FF FFFE       BL               GPIO_Init   ;Chama a subrotina 
+                                                            que inicializa os G
+                                                            PIO
+   49 0000000C         
+   50 0000000C         MainLoop
+   51 0000000C F7FF FFFE       BL               PortJ_Input ;Chama a subrotina 
+                                                            que lê o estado das
+                                                             chaves e coloca o 
+                                                            resultado em R0
+   52 00000010         Verifica_Nenhuma
+   53 00000010 2801            CMP              R0, #2_00000001 ;Verifica se ne
+                                                            nhuma chave está pr
+                                                            essionada
+   54 00000012 D104            BNE              Verifica_SW1 ;Se o teste viu qu
+                                                            e tem pelo menos al
+                                                            guma chave pression
+                                                            ada pula
+   55 00000014 F04F 0000       MOV              R0, #0      ;Não acender nenhum
+                                                             LED
+   56 00000018 F7FF FFFE       BL               PortN_Output ;Chamar a função p
+                                                            ara não acender nen
+                                                            hum LED
+   57 0000001C E7F6            B                MainLoop    ;Se o teste viu que
+                                                             nenhuma chave está
+                                                             pressionada, volta
+                                                             para o laço princi
+                                                            pal
+   58 0000001E         Verifica_SW1
+   59 0000001E 2800            CMP              R0, #2_00000000 ;Verifica se so
+                                                            mente a chave SW1 e
+                                                            stá pressionada
+   60 00000020 D1F4            BNE              MainLoop    ;Se o teste falhou,
+                                                             volta para o iníci
+                                                            o do laço principal
+                                                            
+   61 00000022 F000 F801       BL               Pisca_LED   ;Chama a rotina par
+                                                            a piscar LED
+   62 00000026 E7F1            B                MainLoop    ;Volta para o laço 
+                                                            principal
+   63 00000028         
+   64 00000028         ;#######################################################
+                       #########################
+   65 00000028         ; Função Pisca_LED
+   66 00000028         ; Parâmetro de entrada: Não tem
+   67 00000028         ; Parâmetro de saída: Não tem
+   68 00000028         ;#######################################################
+                       #########################
+   69 00000028         Pisca_LED
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   70 00000028 F04F 0002       MOV              R0, #2_10   ;Setar o parâmetro 
+                                                            de entrada da funçã
+                                                            o setando o BIT1
+   71 0000002C B500            PUSH             {LR}
+   72 0000002E F7FF FFFE       BL               PortN_Output ;Chamar a função p
+                                                            ara acender o LED1
+   73 00000032 F44F 70FA       MOV              R0, #500    ;Carregar o parâmet
+                                                            ro da chamada da ro
+                                                            tina SysTick
+   74 00000036 F7FF FFFE       BL               SysTick_Wait1ms ;Chamar a rotin
+                                                            a Systick para espe
+                                                            rar 500ms
+   75 0000003A F04F 0000       MOV              R0, #0      ;Setar o parâmetro 
+                                                            de entrada da funçã
+                                                            o apagando o BIT1
+   76 0000003E F7FF FFFE       BL               PortN_Output ;Chamar a rotina p
+                                                            ara apagar o LED
+   77 00000042 F44F 70FA       MOV              R0, #500    ;Carregar o parâmet
+                                                            ro da chamada da ro
+                                                            tina SysTick
+   78 00000046 F7FF FFFE       BL               SysTick_Wait1ms ;Chamar a rotin
+                                                            a Systick para espe
+                                                            rar 500ms
+   79 0000004A F85D EB04       POP              {LR}
+   80 0000004E 4770            BX               LR          ;return
+   81 00000050         
+   82 00000050         ;#######################################################
+                       #########################
+   83 00000050         ; Fim do Arquivo
+   84 00000050         ;#######################################################
+                       #########################
+   85 00000050                 ALIGN                        ;Garante que o fim 
+                                                            da seção está alinh
+                                                            ada 
+   86 00000050                 END                          ;Fim do arquivo
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
+interwork --depend=.\objects\main.d -o.\objects\main.o -IC:\Users\DaLuz\AppData
+\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C129 --predefine="__EVAL
+ SETA 1" --predefine="__UVISION_VERSION SETA 536" --predefine="TM4C1294NCPDT SE
+TA 1" --list=.\listings\main.lst main.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DATA 00000000
+
+Symbol: DATA
+   Definitions
+      At line 20 in file main.s
+   Uses
+      None
+Comment: DATA unused
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 30 in file main.s
+   Uses
+      None
+Comment: .text unused
+MainLoop 0000000C
+
+Symbol: MainLoop
+   Definitions
+      At line 50 in file main.s
+   Uses
+      At line 57 in file main.s
+      At line 60 in file main.s
+      At line 62 in file main.s
+
+Pisca_LED 00000028
+
+Symbol: Pisca_LED
+   Definitions
+      At line 69 in file main.s
+   Uses
+      At line 61 in file main.s
+Comment: Pisca_LED used once
+Start 00000000
+
+Symbol: Start
+   Definitions
+      At line 45 in file main.s
+   Uses
+      At line 32 in file main.s
+Comment: Start used once
+Verifica_Nenhuma 00000010
+
+Symbol: Verifica_Nenhuma
+   Definitions
+      At line 52 in file main.s
+   Uses
+      None
+Comment: Verifica_Nenhuma unused
+Verifica_SW1 0000001E
+
+Symbol: Verifica_SW1
+   Definitions
+      At line 58 in file main.s
+   Uses
+      At line 54 in file main.s
+Comment: Verifica_SW1 used once
+6 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+GPIO_Init 00000000
+
+Symbol: GPIO_Init
+   Definitions
+      At line 40 in file main.s
+   Uses
+      At line 48 in file main.s
+Comment: GPIO_Init used once
+PLL_Init 00000000
+
+Symbol: PLL_Init
+   Definitions
+      At line 37 in file main.s
+   Uses
+      At line 46 in file main.s
+Comment: PLL_Init used once
+PortJ_Input 00000000
+
+Symbol: PortJ_Input
+   Definitions
+      At line 42 in file main.s
+   Uses
+      At line 51 in file main.s
+Comment: PortJ_Input used once
+PortN_Output 00000000
+
+Symbol: PortN_Output
+   Definitions
+      At line 41 in file main.s
+   Uses
+      At line 56 in file main.s
+      At line 72 in file main.s
+      At line 76 in file main.s
+
+SysTick_Init 00000000
+
+Symbol: SysTick_Init
+   Definitions
+      At line 38 in file main.s
+   Uses
+      At line 47 in file main.s
+Comment: SysTick_Init used once
+SysTick_Wait1ms 00000000
+
+Symbol: SysTick_Wait1ms
+   Definitions
+      At line 39 in file main.s
+   Uses
+      At line 74 in file main.s
+      At line 78 in file main.s
+
+6 symbols
+347 symbols in table
